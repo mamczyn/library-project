@@ -1,12 +1,30 @@
 package pl.edu.pjwstk.s32410.library.shared.model.book;
 
+import java.util.UUID;
+
+import org.springframework.data.annotation.Id;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import pl.edu.pjwstk.s32410.library.shared.model.Site;
 
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
+@Entity
 public class StorageBook {
-	private Site site;
-	private Book reference;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID id;
+
+    @ManyToOne
+    private Site site;
+
+    @ManyToOne
+    private Book reference;
 }
