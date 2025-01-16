@@ -1,5 +1,6 @@
 package pl.edu.pjwstk.s32410.library.shared.model;
 
+import java.util.Date;
 import java.util.UUID;
 
 import jakarta.persistence.Entity;
@@ -33,4 +34,7 @@ public class Rental {
 
     @ManyToOne
     private Employee employee;
+    
+    private Date start;
+    private Date end;
 }
