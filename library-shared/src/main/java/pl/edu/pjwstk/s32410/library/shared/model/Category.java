@@ -1,4 +1,4 @@
-package pl.edu.pjwstk.s32410.library.shared.model.book;
+package pl.edu.pjwstk.s32410.library.shared.model;
 
 import java.util.UUID;
 
@@ -16,11 +16,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class Author {
+public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
     private String name;
-    private String surname;
 }

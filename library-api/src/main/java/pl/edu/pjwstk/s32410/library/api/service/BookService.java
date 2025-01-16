@@ -4,7 +4,7 @@ package pl.edu.pjwstk.s32410.library.api.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.edu.pjwstk.s32410.library.api.repository.BookRepository;
-import pl.edu.pjwstk.s32410.library.shared.model.book.Book;
+import pl.edu.pjwstk.s32410.library.shared.model.Book;
 
 import java.util.List;
 import java.util.Optional;

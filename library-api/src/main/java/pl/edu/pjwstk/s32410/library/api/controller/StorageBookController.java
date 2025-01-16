@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.edu.pjwstk.s32410.library.api.service.StorageBookService;
-import pl.edu.pjwstk.s32410.library.shared.model.book.StorageBook;
+import pl.edu.pjwstk.s32410.library.shared.model.StorageBook;
 
 import java.util.List;
 import java.util.Optional;

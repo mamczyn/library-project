@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.edu.pjwstk.s32410.library.api.service.CategoryService;
-import pl.edu.pjwstk.s32410.library.shared.model.book.Category;
+import pl.edu.pjwstk.s32410.library.shared.model.Category;
 
 import java.util.List;
 import java.util.Optional;
