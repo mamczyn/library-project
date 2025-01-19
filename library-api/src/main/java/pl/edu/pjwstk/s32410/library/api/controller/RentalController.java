@@ -1,12 +1,11 @@
-
 package pl.edu.pjwstk.s32410.library.api.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.edu.pjwstk.s32410.library.api.service.RentalService;
 import pl.edu.pjwstk.s32410.library.shared.model.Rental;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -24,9 +23,8 @@ public class RentalController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Rental> getRentalById(@PathVariable UUID id) {
-        Optional<Rental> rental = rentalService.findById(id);
-        return rental.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public Optional<Rental> getRentalById(@PathVariable UUID id) {
+        return rentalService.findById(id);
     }
 
     @PostMapping
@@ -34,21 +32,83 @@ public class RentalController {
         return rentalService.save(rental);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Rental> updateRental(@PathVariable UUID id, @RequestBody Rental rental) {
-        if (!rentalService.findById(id).isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
-        rental.setId(id);
-        return ResponseEntity.ok(rentalService.save(rental));
+    @DeleteMapping("/{id}")
+    public void deleteRental(@PathVariable UUID id) {
+        rentalService.deleteById(id);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteRental(@PathVariable UUID id) {
-        if (!rentalService.findById(id).isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
-        rentalService.deleteById(id);
-        return ResponseEntity.noContent().build();
+    @GetMapping("/customer/{customerId}")
+    public List<Rental> getRentalsByCustomerId(@PathVariable UUID customerId) {
+        return rentalService.findByCustomerId(customerId);
+    }
+
+    @GetMapping("/book/{bookId}")
+    public List<Rental> getRentalsByBookId(@PathVariable UUID bookId) {
+        return rentalService.findByBookId(bookId);
+    }
+
+    @GetMapping("/date-range")
+    public List<Rental> getRentalsByDateRange(@RequestParam Date startDate, @RequestParam Date endDate) {
+        return rentalService.findByStartBetween(startDate, endDate);
+    }
+
+    @GetMapping("/site/{siteId}")
+    public List<Rental> getRentalsBySiteId(@PathVariable UUID siteId) {
+        return rentalService.findBySiteId(siteId);
+    }
+
+    @GetMapping("/employee/{employeeId}")
+    public List<Rental> getRentalsByEmployeeId(@PathVariable UUID employeeId) {
+        return rentalService.findByEmployeeId(employeeId);
+    }
+
+    @GetMapping("/book-title")
+    public List<Rental> getRentalsByBookTitle(@RequestParam String title) {
+        return rentalService.findByBookTitle(title);
+    }
+
+    @GetMapping("/customer-name")
+    public List<Rental> getRentalsByCustomerName(@RequestParam String name) {
+        return rentalService.findByCustomerName(name);
+    }
+
+    @GetMapping("/employee-name")
+    public List<Rental> getRentalsByEmployeeName(@RequestParam String name) {
+        return rentalService.findByEmployeeName(name);
+    }
+
+    @GetMapping("/site-name")
+    public List<Rental> getRentalsBySiteName(@RequestParam String name) {
+        return rentalService.findBySiteName(name);
+    }
+
+    @GetMapping("/book-category")
+    public List<Rental> getRentalsByBookCategory(@RequestParam String category) {
+        return rentalService.findByBookCategory(category);
+    }
+
+    @GetMapping("/author-name")
+    public List<Rental> getRentalsByAuthorName(@RequestParam String author) {
+        return rentalService.findByAuthorName(author);
+    }
+
+    @GetMapping("/active")
+    public List<Rental> getActiveRentals() {
+        return rentalService.findActiveRentals();
+    }
+
+    @GetMapping("/completed")
+    public List<Rental> getCompletedRentals() {
+        return rentalService.findCompletedRentals();
+    }
+
+    @GetMapping("/overdue")
+    public List<Rental> getOverdueRentals() {
+        return rentalService.findOverdueRentals();
+    }
+
+    @GetMapping("/book-description")
+    public List<Rental> getRentalsByBookDescription(@RequestParam String description) {
+        return rentalService.findByBookDescription(description);
     }
 }

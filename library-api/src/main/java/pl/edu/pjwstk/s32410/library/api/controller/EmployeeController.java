@@ -1,4 +1,3 @@
-
 package pl.edu.pjwstk.s32410.library.api.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,5 +49,30 @@ public class EmployeeController {
         }
         employeeService.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/name")
+    public List<Employee> getEmployeesByName(@RequestParam String name) {
+        return employeeService.findByName(name);
+    }
+
+    @GetMapping("/surname")
+    public List<Employee> getEmployeesBySurname(@RequestParam String surname) {
+        return employeeService.findBySurname(surname);
+    }
+
+    @GetMapping("/email")
+    public List<Employee> getEmployeesByEmail(@RequestParam String email) {
+        return employeeService.findByEmail(email);
+    }
+
+    @GetMapping("/phone-number")
+    public List<Employee> getEmployeesByPhoneNumber(@RequestParam String phoneNumber) {
+        return employeeService.findByPhoneNumber(phoneNumber);
+    }
+
+    @GetMapping("/site/{siteId}")
+    public List<Employee> getEmployeesBySiteId(@PathVariable UUID siteId) {
+        return employeeService.findBySiteId(siteId);
     }
 }

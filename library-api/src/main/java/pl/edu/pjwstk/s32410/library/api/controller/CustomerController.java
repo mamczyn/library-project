@@ -1,4 +1,3 @@
-
 package pl.edu.pjwstk.s32410.library.api.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,5 +49,30 @@ public class CustomerController {
         }
         customerService.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/name")
+    public List<Customer> getCustomersByName(@RequestParam String name) {
+        return customerService.findByName(name);
+    }
+
+    @GetMapping("/surname")
+    public List<Customer> getCustomersBySurname(@RequestParam String surname) {
+        return customerService.findBySurname(surname);
+    }
+
+    @GetMapping("/email")
+    public List<Customer> getCustomersByEmail(@RequestParam String email) {
+        return customerService.findByEmail(email);
+    }
+
+    @GetMapping("/phone-number")
+    public List<Customer> getCustomersByPhoneNumber(@RequestParam String phoneNumber) {
+        return customerService.findByPhoneNumber(phoneNumber);
+    }
+
+    @GetMapping("/site/{siteId}")
+    public List<Customer> getCustomersBySiteId(@PathVariable UUID siteId) {
+        return customerService.findBySiteId(siteId);
     }
 }

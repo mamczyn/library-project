@@ -1,5 +1,4 @@
 package pl.edu.pjwstk.s32410.library.shared.model;
-
 import java.util.UUID;
 
 import jakarta.persistence.Entity;

@@ -1,4 +1,3 @@
-
 package pl.edu.pjwstk.s32410.library.api.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,5 +49,25 @@ public class AuthorController {
         }
         authorService.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/name")
+    public List<Author> getAuthorsByName(@RequestParam String name) {
+        return authorService.findByName(name);
+    }
+
+    @GetMapping("/surname")
+    public List<Author> getAuthorsBySurname(@RequestParam String surname) {
+        return authorService.findBySurname(surname);
+    }
+
+    @GetMapping("/nationality")
+    public List<Author> getAuthorsByNationality(@RequestParam String nationality) {
+        return authorService.findByNationality(nationality);
+    }
+
+    @GetMapping("/biography")
+    public List<Author> getAuthorsByBiographyKeyword(@RequestParam String keyword) {
+        return authorService.findByBiographyKeyword(keyword);
     }
 }

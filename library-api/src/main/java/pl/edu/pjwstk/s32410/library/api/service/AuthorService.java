@@ -1,4 +1,3 @@
-
 package pl.edu.pjwstk.s32410.library.api.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,5 +29,21 @@ public class AuthorService {
 
     public void deleteById(UUID id) {
         authorRepository.deleteById(id);
+    }
+
+    public List<Author> findByName(String name) {
+        return authorRepository.findByName(name);
+    }
+
+    public List<Author> findBySurname(String surname) {
+        return authorRepository.findBySurname(surname);
+    }
+
+    public List<Author> findByNationality(String nationality) {
+        return authorRepository.findByNationality(nationality);
+    }
+
+    public List<Author> findByBiographyKeyword(String keyword) {
+        return authorRepository.findByBiographyKeyword(keyword);
     }
 }

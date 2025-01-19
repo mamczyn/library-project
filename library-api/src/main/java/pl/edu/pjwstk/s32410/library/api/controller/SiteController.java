@@ -1,4 +1,3 @@
-
 package pl.edu.pjwstk.s32410.library.api.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,5 +49,20 @@ public class SiteController {
         }
         siteService.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/name")
+    public List<Site> getSitesByName(@RequestParam String name) {
+        return siteService.findByName(name);
+    }
+
+    @GetMapping("/address")
+    public List<Site> getSitesByAddress(@RequestParam String address) {
+        return siteService.findByAddress(address);
+    }
+
+    @GetMapping("/phone-number")
+    public List<Site> getSitesByPhoneNumber(@RequestParam String phoneNumber) {
+        return siteService.findByPhoneNumber(phoneNumber);
     }
 }

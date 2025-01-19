@@ -1,4 +1,3 @@
-
 package pl.edu.pjwstk.s32410.library.api.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,5 +29,17 @@ public class CategoryService {
 
     public void deleteById(UUID id) {
         categoryRepository.deleteById(id);
+    }
+
+    public List<Category> findByName(String name) {
+        return categoryRepository.findByName(name);
+    }
+
+    public List<Category> findByNameContaining(String name) {
+        return categoryRepository.findByNameContaining(name);
+    }
+
+    public List<Category> findByExactName(String name) {
+        return categoryRepository.findByExactName(name);
     }
 }

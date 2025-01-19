@@ -1,4 +1,3 @@
-
 package pl.edu.pjwstk.s32410.library.api.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,5 +49,30 @@ public class BookController {
         }
         bookService.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/title")
+    public List<Book> getBooksByTitle(@RequestParam String title) {
+        return bookService.findByTitle(title);
+    }
+
+    @GetMapping("/publication-year")
+    public List<Book> getBooksByPublicationYear(@RequestParam int year) {
+        return bookService.findByPublicationYear(year);
+    }
+
+    @GetMapping("/isbn")
+    public List<Book> getBooksByIsbn(@RequestParam String isbn) {
+        return bookService.findByIsbn(isbn);
+    }
+
+    @GetMapping("/language")
+    public List<Book> getBooksByLanguage(@RequestParam String language) {
+        return bookService.findByLanguage(language);
+    }
+
+    @GetMapping("/publisher")
+    public List<Book> getBooksByPublisher(@RequestParam String publisher) {
+        return bookService.findByPublisher(publisher);
     }
 }

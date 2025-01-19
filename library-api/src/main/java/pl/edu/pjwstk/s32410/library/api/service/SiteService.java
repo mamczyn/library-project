@@ -1,4 +1,3 @@
-
 package pl.edu.pjwstk.s32410.library.api.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,5 +29,17 @@ public class SiteService {
 
     public void deleteById(UUID id) {
         siteRepository.deleteById(id);
+    }
+
+    public List<Site> findByName(String name) {
+        return siteRepository.findByName(name);
+    }
+
+    public List<Site> findByAddress(String address) {
+        return siteRepository.findByAddress(address);
+    }
+
+    public List<Site> findByPhoneNumber(String phoneNumber) {
+        return siteRepository.findByPhoneNumber(phoneNumber);
     }
 }

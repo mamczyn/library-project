@@ -10,11 +10,18 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/librarydb
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: rootpassword
+      
       SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.MySQLDialect
       SPRING_DATASOURCE_DRIVERCLASSNAME: com.mysql.cj.jdbc.Driver
       SPRING_BATCH_JDBC_INITIALIZE_SCHEMA: always
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
-
+    depends_on:
+      - mysql
+      - cache
+    networks:
+      - library-network
+    restart: on-failure:5
+   
   mysql:
     image: mysql:8.0
     environment:
@@ -22,3 +29,18 @@ services:
       MYSQL_DATABASE: librarydb
     ports:
       - "3306:3306"
+    networks:
+      - library-network
+
+  cache:
+    image: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - library-network
+    
+networks:
+  library-network:
+    driver: bridge
+  
+

@@ -1,4 +1,3 @@
-
 package pl.edu.pjwstk.s32410.library.api.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,5 +29,25 @@ public class EmployeeService {
 
     public void deleteById(UUID id) {
         employeeRepository.deleteById(id);
+    }
+
+    public List<Employee> findByName(String name) {
+        return employeeRepository.findByName(name);
+    }
+
+    public List<Employee> findBySurname(String surname) {
+        return employeeRepository.findBySurname(surname);
+    }
+
+    public List<Employee> findByEmail(String email) {
+        return employeeRepository.findByEmail(email);
+    }
+
+    public List<Employee> findByPhoneNumber(String phoneNumber) {
+        return employeeRepository.findByPhoneNumber(phoneNumber);
+    }
+
+    public List<Employee> findBySiteId(UUID siteId) {
+        return employeeRepository.findBySiteId(siteId);
     }
 }

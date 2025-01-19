@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,7 +35,12 @@ public class Rental {
 
     @ManyToOne
     private Employee employee;
-    
+
+    @NotNull
     private Date start;
+    
+    @NotNull
     private Date end;
+    
+    private Date returnDate;
 }

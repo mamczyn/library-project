@@ -1,4 +1,3 @@
-
 package pl.edu.pjwstk.s32410.library.api.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,5 +29,25 @@ public class CustomerService {
 
     public void deleteById(UUID id) {
         customerRepository.deleteById(id);
+    }
+
+    public List<Customer> findByName(String name) {
+        return customerRepository.findByName(name);
+    }
+
+    public List<Customer> findBySurname(String surname) {
+        return customerRepository.findBySurname(surname);
+    }
+
+    public List<Customer> findByEmail(String email) {
+        return customerRepository.findByEmail(email);
+    }
+
+    public List<Customer> findByPhoneNumber(String phoneNumber) {
+        return customerRepository.findByPhoneNumber(phoneNumber);
+    }
+
+    public List<Customer> findBySiteId(UUID siteId) {
+        return customerRepository.findBySiteId(siteId);
     }
 }

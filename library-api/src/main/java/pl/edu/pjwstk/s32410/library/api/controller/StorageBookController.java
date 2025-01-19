@@ -1,4 +1,3 @@
-
 package pl.edu.pjwstk.s32410.library.api.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,5 +49,40 @@ public class StorageBookController {
         }
         storageBookService.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/site/{siteId}")
+    public List<StorageBook> getStorageBooksBySiteId(@PathVariable UUID siteId) {
+        return storageBookService.findBySiteId(siteId);
+    }
+
+    @GetMapping("/reference/{referenceId}")
+    public List<StorageBook> getStorageBooksByReferenceId(@PathVariable UUID referenceId) {
+        return storageBookService.findByReferenceId(referenceId);
+    }
+
+    @GetMapping("/site-name")
+    public List<StorageBook> getStorageBooksBySiteName(@RequestParam String siteName) {
+        return storageBookService.findBySiteName(siteName);
+    }
+
+    @GetMapping("/book-title")
+    public List<StorageBook> getStorageBooksByBookTitle(@RequestParam String title) {
+        return storageBookService.findByBookTitle(title);
+    }
+
+    @GetMapping("/book-isbn")
+    public List<StorageBook> getStorageBooksByBookIsbn(@RequestParam String isbn) {
+        return storageBookService.findByBookIsbn(isbn);
+    }
+
+    @GetMapping("/book-publisher")
+    public List<StorageBook> getStorageBooksByBookPublisher(@RequestParam String publisher) {
+        return storageBookService.findByBookPublisher(publisher);
+    }
+
+    @GetMapping("/book-language")
+    public List<StorageBook> getStorageBooksByBookLanguage(@RequestParam String language) {
+        return storageBookService.findByBookLanguage(language);
     }
 }

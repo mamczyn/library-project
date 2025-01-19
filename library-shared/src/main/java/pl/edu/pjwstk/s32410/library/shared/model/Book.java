@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,6 +31,13 @@ public class Book {
     @ManyToMany
     private List<Author> authors = new ArrayList<>();
 
-    private String title;
-    private String description;
+    @NotNull
+    private String title = "Unknown";
+    
+    private String description = "Unknown";
+    private int publicationYear = 0;
+    private String isbn = "Unknown";
+    private String language = "English";
+    private String publisher = "Unknown";
+    private List<String> images;
 }

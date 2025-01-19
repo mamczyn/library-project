@@ -1,4 +1,3 @@
-
 package pl.edu.pjwstk.s32410.library.api.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,5 +49,10 @@ public class CategoryController {
         }
         categoryService.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/name")
+    public List<Category> getCategoriesByName(@RequestParam String name) {
+        return categoryService.findByName(name);
     }
 }

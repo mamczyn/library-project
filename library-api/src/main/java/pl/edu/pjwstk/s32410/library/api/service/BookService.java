@@ -31,4 +31,24 @@ public class BookService {
     public void deleteById(UUID id) {
         bookRepository.deleteById(id);
     }
+
+    public List<Book> findByTitle(String title) {
+        return bookRepository.findByTitle(title);
+    }
+
+    public List<Book> findByPublicationYear(int year) {
+        return bookRepository.findByPublicationYear(year);
+    }
+
+    public List<Book> findByIsbn(String isbn) {
+        return bookRepository.findByIsbn(isbn);
+    }
+
+    public List<Book> findByLanguage(String language) {
+        return bookRepository.findByLanguage(language);
+    }
+
+    public List<Book> findByPublisher(String publisher) {
+        return bookRepository.findByPublisher(publisher);
+    }
 }
