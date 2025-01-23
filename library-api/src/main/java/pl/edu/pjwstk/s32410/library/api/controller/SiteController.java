@@ -51,18 +51,18 @@ public class SiteController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/name")
-    public List<Site> getSitesByName(@RequestParam String name) {
+    @GetMapping("/name/{name}")
+    public List<Site> getSitesByName(@PathVariable String name) {
         return siteService.findByName(name);
     }
 
-    @GetMapping("/address")
-    public List<Site> getSitesByAddress(@RequestParam String address) {
+    @GetMapping("/address/{address}")
+    public List<Site> getSitesByAddress(@PathVariable String address) {
         return siteService.findByAddress(address);
     }
 
-    @GetMapping("/phone-number")
-    public List<Site> getSitesByPhoneNumber(@RequestParam String phoneNumber) {
-        return siteService.findByPhoneNumber(phoneNumber);
+    @GetMapping("/phone-number/{number}")
+    public List<Site> getSitesByPhoneNumber(@PathVariable String number) {
+        return siteService.findByPhoneNumber(number);
     }
 }

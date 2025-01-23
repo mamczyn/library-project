@@ -1,0 +1,172 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&family=Syne:wght@400..800&display=swap');
+
+:root {
+    --ff: "Syne", sans-serif;
+    --ff2: "Fira Code", monospace;
+    --h1: 800 2rem/1.2em var(--ff);
+    --p: 400 1rem/1.5em var(--ff);
+    --p-code: 300 .7rem/2em var(--ff2);
+    --hue: 214;
+
+    --tertiary-hue: calc(var(--hue) + 300);
+    --accent-hue: calc(var(--hue) + 60);
+    --primary-color: hsl(var(--hue), 50%, 90%);
+    --pre-primary-color: hsl(var(--hue), 50%, 95%);
+    --pre-primary-color-darker: hsl(var(--hue), 50%, 92.5%);
+    --secondary-color: hsl(var(--hue), 50%, 10%);
+    --tertiary-color: hsl(var(--tertiary-hue), 80%, 20%);
+    --accent-color: hsl(var(--accent-hue), 80%, 20%);
+    --accent-color-lighter: hsl(var(--accent-hue), 80%, 30%);
+}
+
+.dark {
+    --primary-color: hsl(var(--hue), 50%, 10%);
+    --pre-primary-color: hsl(var(--hue), 50%, 15%);
+    --pre-primary-color-darker: hsl(var(--hue), 50%, 12.5%);
+    --secondary-color: hsl(var(--hue), 50%, 90%);
+    --tertiary-color: hsl(var(--tertiary-hue), 80%, 80%);
+    --accent-color: hsl(var(--accent-hue), 80%, 80%);
+    --accent-color-lighter: hsl(var(--accent-hue), 80%, 70%);
+}
+
+body {
+    background: var(--pre-primary-color);
+    margin: 10px;
+    margin-bottom: 18px;
+    font-family: var(--ff);
+    color: var(--secondary-color);
+    transition-duration: 0.1s;
+    font-size: 16px;
+}
+
+input {
+    font-size: 18px;
+    font-family: var(--ff2);
+    color: var(--accent-color);
+    padding: 0.4em 0.6em 0.4em 0.6em;
+    border-radius: 5px;
+    border: none;
+    background-color: var(--primary-color);
+    height: 2.1em;
+    border: transparent solid 2px;
+}
+
+input:is(:-webkit-autofill, :autofill) {
+    background-color: var(--primary-color) !important;
+}
+
+input:focus {
+    outline: none;
+    border: var(--accent-color) solid 2px;
+    border-width: 2px 0 2px 0;
+    border-top-color: transparent;
+}
+
+.button-primary {
+    background-color: var(--accent-color);
+    padding: 0.5em 0.8em 0.5em 0.8em;
+    border-radius: 0.5em;
+    border: none;
+    color: var(--primary-color);
+    cursor: pointer;
+}
+
+.button-primary:hover {
+    background-color: var(--accent-color-lighter);
+}
+
+.button-secondary {
+    background-color: transparent;
+    padding: 0.5em 0.8em 0.5em 0.8em;
+    border-radius: 0.5em;
+    border: none;
+    color: var(--accent-color);
+    cursor: pointer;
+}
+
+.button-secondary:hover {
+    background-color: var(--primary-color);
+}
+
+#content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 50px 20px 20px 20px;
+    gap: 30px;
+}
+
+#search-bar {
+    width: 850px;
+}
+
+#results-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    width: calc(100% - 100px);
+    gap: 40px;
+}
+
+.book-card {
+    display: flex;
+    height: 250px;
+    width: 450px;
+    background-color: var(--primary-color);
+    border-radius: 10px;
+}
+
+.book-card > .cover {
+    height: calc(250px - 20px);
+    width: 150px;
+    object-fit: cover;
+    background-color: white;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.book-details {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    padding: 20px;
+}
+
+.book-details > .title {
+    margin: 0px;
+}
+
+.book-details a {
+    color: var(--secondary-color);
+    text-decoration: none;
+}
+
+.book-details a:hover {
+    color: var(--secondary-color);
+    text-decoration: underline;
+}
+
+.book-details > .authors {
+    margin: 7px 0 0px 0;
+    font-weight: 300;
+}
+
+.book-details > .description {
+    font-family: var(--ff2);
+    font-weight: 400;
+    min-height: 10px;
+    flex-grow: 1;
+}
+
+.book-details-footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.book-details-footer > .availability {
+    font-family: var(--ff2);
+    font-weight: 900;
+}

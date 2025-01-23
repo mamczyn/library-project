@@ -61,28 +61,28 @@ public class StorageBookController {
         return storageBookService.findByReferenceId(referenceId);
     }
 
-    @GetMapping("/site-name")
-    public List<StorageBook> getStorageBooksBySiteName(@RequestParam String siteName) {
-        return storageBookService.findBySiteName(siteName);
+    @GetMapping("/site-name/{site}")
+    public List<StorageBook> getStorageBooksBySiteName(@PathVariable String site) {
+        return storageBookService.findBySiteName(site);
     }
 
-    @GetMapping("/book-title")
-    public List<StorageBook> getStorageBooksByBookTitle(@RequestParam String title) {
+    @GetMapping("/book-title/{title}")
+    public List<StorageBook> getStorageBooksByBookTitle(@PathVariable String title) {
         return storageBookService.findByBookTitle(title);
     }
 
-    @GetMapping("/book-isbn")
-    public List<StorageBook> getStorageBooksByBookIsbn(@RequestParam String isbn) {
+    @GetMapping("/book-isbn/{isbn}")
+    public List<StorageBook> getStorageBooksByBookIsbn(@PathVariable String isbn) {
         return storageBookService.findByBookIsbn(isbn);
     }
 
-    @GetMapping("/book-publisher")
-    public List<StorageBook> getStorageBooksByBookPublisher(@RequestParam String publisher) {
+    @GetMapping("/book-publisher/{publisher}")
+    public List<StorageBook> getStorageBooksByBookPublisher(@PathVariable String publisher) {
         return storageBookService.findByBookPublisher(publisher);
     }
 
-    @GetMapping("/book-language")
-    public List<StorageBook> getStorageBooksByBookLanguage(@RequestParam String language) {
+    @GetMapping("/book-language/{language}")
+    public List<StorageBook> getStorageBooksByBookLanguage(@PathVariable String language) {
         return storageBookService.findByBookLanguage(language);
     }
 }

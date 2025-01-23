@@ -40,4 +40,16 @@ public class Book {
     private String language = "English";
     private String publisher = "Unknown";
     private List<String> images;
+    
+    public boolean containsInTitle(String query) {
+    	if(title == null || query == null) return false;
+    	
+    	return title.toLowerCase().contains(query.toLowerCase());
+    }
+    
+    public boolean containsInDescription(String query) {
+    	if(description == null || query == null) return false;
+    	
+    	return description.toLowerCase().contains(query.toLowerCase());
+    }
 }

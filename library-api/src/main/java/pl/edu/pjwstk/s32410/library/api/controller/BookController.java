@@ -51,28 +51,28 @@ public class BookController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/title")
-    public List<Book> getBooksByTitle(@RequestParam String title) {
+    @GetMapping("/title/{title}")
+    public List<Book> getBooksByTitle(@PathVariable String title) {
         return bookService.findByTitle(title);
     }
 
-    @GetMapping("/publication-year")
-    public List<Book> getBooksByPublicationYear(@RequestParam int year) {
+    @GetMapping("/publication-year/{year}")
+    public List<Book> getBooksByPublicationYear(@PathVariable int year) {
         return bookService.findByPublicationYear(year);
     }
 
-    @GetMapping("/isbn")
-    public List<Book> getBooksByIsbn(@RequestParam String isbn) {
+    @GetMapping("/isbn/{isbn}")
+    public List<Book> getBooksByIsbn(@PathVariable String isbn) {
         return bookService.findByIsbn(isbn);
     }
 
-    @GetMapping("/language")
-    public List<Book> getBooksByLanguage(@RequestParam String language) {
+    @GetMapping("/language/{language}")
+    public List<Book> getBooksByLanguage(@PathVariable String language) {
         return bookService.findByLanguage(language);
     }
 
-    @GetMapping("/publisher")
-    public List<Book> getBooksByPublisher(@RequestParam String publisher) {
+    @GetMapping("/publisher/{publisher}")
+    public List<Book> getBooksByPublisher(@PathVariable String publisher) {
         return bookService.findByPublisher(publisher);
     }
 }

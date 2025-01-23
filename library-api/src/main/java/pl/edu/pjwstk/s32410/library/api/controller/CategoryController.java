@@ -51,8 +51,8 @@ public class CategoryController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/name")
-    public List<Category> getCategoriesByName(@RequestParam String name) {
+    @GetMapping("/name/{name}")
+    public List<Category> getCategoriesByName(@PathVariable String name) {
         return categoryService.findByName(name);
     }
 }

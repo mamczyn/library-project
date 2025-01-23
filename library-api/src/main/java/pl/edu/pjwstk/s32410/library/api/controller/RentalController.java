@@ -62,33 +62,33 @@ public class RentalController {
         return rentalService.findByEmployeeId(employeeId);
     }
 
-    @GetMapping("/book-title")
-    public List<Rental> getRentalsByBookTitle(@RequestParam String title) {
+    @GetMapping("/book-title/{title}")
+    public List<Rental> getRentalsByBookTitle(@PathVariable String title) {
         return rentalService.findByBookTitle(title);
     }
 
-    @GetMapping("/customer-name")
-    public List<Rental> getRentalsByCustomerName(@RequestParam String name) {
+    @GetMapping("/customer-name/{name}")
+    public List<Rental> getRentalsByCustomerName(@PathVariable String name) {
         return rentalService.findByCustomerName(name);
     }
 
-    @GetMapping("/employee-name")
-    public List<Rental> getRentalsByEmployeeName(@RequestParam String name) {
+    @GetMapping("/employee-name/{name}")
+    public List<Rental> getRentalsByEmployeeName(@PathVariable String name) {
         return rentalService.findByEmployeeName(name);
     }
 
-    @GetMapping("/site-name")
-    public List<Rental> getRentalsBySiteName(@RequestParam String name) {
+    @GetMapping("/site-name/{name}")
+    public List<Rental> getRentalsBySiteName(@PathVariable String name) {
         return rentalService.findBySiteName(name);
     }
 
-    @GetMapping("/book-category")
-    public List<Rental> getRentalsByBookCategory(@RequestParam String category) {
+    @GetMapping("/book-category/{category}")
+    public List<Rental> getRentalsByBookCategory(@PathVariable String category) {
         return rentalService.findByBookCategory(category);
     }
 
-    @GetMapping("/author-name")
-    public List<Rental> getRentalsByAuthorName(@RequestParam String author) {
+    @GetMapping("/author-name/{author}")
+    public List<Rental> getRentalsByAuthorName(@PathVariable String author) {
         return rentalService.findByAuthorName(author);
     }
 
@@ -107,8 +107,8 @@ public class RentalController {
         return rentalService.findOverdueRentals();
     }
 
-    @GetMapping("/book-description")
-    public List<Rental> getRentalsByBookDescription(@RequestParam String description) {
+    @GetMapping("/book-description/{description}")
+    public List<Rental> getRentalsByBookDescription(@PathVariable String description) {
         return rentalService.findByBookDescription(description);
     }
 }

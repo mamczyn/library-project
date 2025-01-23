@@ -28,4 +28,22 @@ public class Author {
     private String surname = "";
     private String biography = "Unknown";
     private String nationality = "Unknown";
+    
+    public boolean containsInName(String query) {
+    	if(name == null || query == null) return false;
+    	
+    	return name.toLowerCase().contains(query.toLowerCase());
+    }
+    
+    public boolean containsInSurname(String query) {
+    	if(surname == null || query == null) return false;
+    	
+    	return surname.toLowerCase().contains(query.toLowerCase());
+    }
+    
+    public boolean containsInNameAndSurname(String query) {
+    	if(name == null || surname == null || query == null) return false;
+    	
+    	return (name.toLowerCase() + " " + surname.toLowerCase()).contains(query.toLowerCase());
+    }
 }

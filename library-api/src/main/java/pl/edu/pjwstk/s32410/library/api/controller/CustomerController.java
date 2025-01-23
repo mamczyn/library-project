@@ -51,24 +51,24 @@ public class CustomerController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/name")
-    public List<Customer> getCustomersByName(@RequestParam String name) {
+    @GetMapping("/name/{name}")
+    public List<Customer> getCustomersByName(@PathVariable String name) {
         return customerService.findByName(name);
     }
 
-    @GetMapping("/surname")
-    public List<Customer> getCustomersBySurname(@RequestParam String surname) {
+    @GetMapping("/surname/{surname}")
+    public List<Customer> getCustomersBySurname(@PathVariable String surname) {
         return customerService.findBySurname(surname);
     }
 
-    @GetMapping("/email")
-    public List<Customer> getCustomersByEmail(@RequestParam String email) {
+    @GetMapping("/email/{email}")
+    public List<Customer> getCustomersByEmail(@PathVariable String email) {
         return customerService.findByEmail(email);
     }
 
-    @GetMapping("/phone-number")
-    public List<Customer> getCustomersByPhoneNumber(@RequestParam String phoneNumber) {
-        return customerService.findByPhoneNumber(phoneNumber);
+    @GetMapping("/phone-number/{number}")
+    public List<Customer> getCustomersByPhoneNumber(@PathVariable String number) {
+        return customerService.findByPhoneNumber(number);
     }
 
     @GetMapping("/site/{siteId}")

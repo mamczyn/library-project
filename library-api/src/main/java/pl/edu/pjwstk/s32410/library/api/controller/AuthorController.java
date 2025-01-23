@@ -51,23 +51,23 @@ public class AuthorController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/name")
-    public List<Author> getAuthorsByName(@RequestParam String name) {
+    @GetMapping("/name/{name}")
+    public List<Author> getAuthorsByName(@PathVariable String name) {
         return authorService.findByName(name);
     }
 
-    @GetMapping("/surname")
-    public List<Author> getAuthorsBySurname(@RequestParam String surname) {
+    @GetMapping("/surname/{surname}")
+    public List<Author> getAuthorsBySurname(@PathVariable String surname) {
         return authorService.findBySurname(surname);
     }
 
-    @GetMapping("/nationality")
-    public List<Author> getAuthorsByNationality(@RequestParam String nationality) {
+    @GetMapping("/nationality/{nationality}")
+    public List<Author> getAuthorsByNationality(@PathVariable String nationality) {
         return authorService.findByNationality(nationality);
     }
 
-    @GetMapping("/biography")
-    public List<Author> getAuthorsByBiographyKeyword(@RequestParam String keyword) {
-        return authorService.findByBiographyKeyword(keyword);
+    @GetMapping("/biography/{biography}")
+    public List<Author> getAuthorsByBiographyKeyword(@PathVariable String biography) {
+        return authorService.findByBiographyKeyword(biography);
     }
 }

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Library APP</title>
+    <link th:href="@{/styles/main.css}" rel="stylesheet" />
+    <script th:src="@{/scripts/main.js}"></script>
+</head>
+
+<body class="dark">
+    <div id="content">
+        <div id="top-bar-container">
+            <input th:value="${search}" id="search-bar" type="text" placeholder="Wyszukaj książki tutaj...">
+        </div>
+
+        <div id="results-container">
+            <div th:each="book : ${results}" class="book-card">
+                <img class="cover" th:src="${book.images[0]}">
+                <div class="book-details">
+                    <h2 class="title"><a href="test" th:text="${book.title}">Podstawowy tytul</a></h2>
+                    <h5 class="authors">
+                        <span th:each="author : ${book.authors}">
+                            <a th:text="|${author.name} ${author.surname}|" th:href="@{|/?search=${author.name} ${author.surname}|}">Podstawowy autor</a>
+                        </span>
+                    </h5>
+                    <h5 class="description"></h5>
+                    <div class="book-details-footer">
+                        <small class="isbn" th:text="'ISBN: ' + ${book.isbn}">ISBN: 4252514</small>
+                        <small class="availability">Dostepna</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

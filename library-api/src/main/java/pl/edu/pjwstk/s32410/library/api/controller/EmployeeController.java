@@ -51,24 +51,24 @@ public class EmployeeController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/name")
-    public List<Employee> getEmployeesByName(@RequestParam String name) {
+    @GetMapping("/name/{name}")
+    public List<Employee> getEmployeesByName(@PathVariable String name) {
         return employeeService.findByName(name);
     }
 
-    @GetMapping("/surname")
-    public List<Employee> getEmployeesBySurname(@RequestParam String surname) {
+    @GetMapping("/surname/{surname}")
+    public List<Employee> getEmployeesBySurname(@PathVariable String surname) {
         return employeeService.findBySurname(surname);
     }
 
-    @GetMapping("/email")
-    public List<Employee> getEmployeesByEmail(@RequestParam String email) {
+    @GetMapping("/email/{email}")
+    public List<Employee> getEmployeesByEmail(@PathVariable String email) {
         return employeeService.findByEmail(email);
     }
 
-    @GetMapping("/phone-number")
-    public List<Employee> getEmployeesByPhoneNumber(@RequestParam String phoneNumber) {
-        return employeeService.findByPhoneNumber(phoneNumber);
+    @GetMapping("/phone-number/{number}")
+    public List<Employee> getEmployeesByPhoneNumber(@PathVariable String number) {
+        return employeeService.findByPhoneNumber(number);
     }
 
     @GetMapping("/site/{siteId}")
