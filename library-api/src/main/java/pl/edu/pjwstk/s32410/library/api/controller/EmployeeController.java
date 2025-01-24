@@ -1,14 +1,23 @@
 package pl.edu.pjwstk.s32410.library.api.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import pl.edu.pjwstk.s32410.library.api.service.EmployeeService;
-import pl.edu.pjwstk.s32410.library.shared.model.Employee;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import pl.edu.pjwstk.s32410.library.api.exceptions.employee.EmployeeNotFoundException;
+import pl.edu.pjwstk.s32410.library.api.service.EmployeeService;
+import pl.edu.pjwstk.s32410.library.shared.model.Employee;
 
 @RestController
 @RequestMapping("/employees")
@@ -25,28 +34,28 @@ public class EmployeeController {
     @GetMapping("/{id}")
     public ResponseEntity<Employee> getEmployeeById(@PathVariable UUID id) {
         Optional<Employee> employee = employeeService.findById(id);
-        return employee.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        return ResponseEntity.of(employee);
     }
 
     @PostMapping
     public Employee createEmployee(@RequestBody Employee employee) {
-        return employeeService.save(employee);
+    	employee.setId(null);
+    	
+    	return employeeService.save(employee);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Employee> updateEmployee(@PathVariable UUID id, @RequestBody Employee employee) {
-        if (!employeeService.findById(id).isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
+        if (!employeeService.existsById(id)) throw new EmployeeNotFoundException();
+        
         employee.setId(id);
         return ResponseEntity.ok(employeeService.save(employee));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteEmployee(@PathVariable UUID id) {
-        if (!employeeService.findById(id).isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
+        if (!employeeService.existsById(id)) throw new EmployeeNotFoundException();
+        
         employeeService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
@@ -69,10 +78,5 @@ public class EmployeeController {
     @GetMapping("/phone-number/{number}")
     public List<Employee> getEmployeesByPhoneNumber(@PathVariable String number) {
         return employeeService.findByPhoneNumber(number);
-    }
-
-    @GetMapping("/site/{siteId}")
-    public List<Employee> getEmployeesBySiteId(@PathVariable UUID siteId) {
-        return employeeService.findBySiteId(siteId);
     }
 }

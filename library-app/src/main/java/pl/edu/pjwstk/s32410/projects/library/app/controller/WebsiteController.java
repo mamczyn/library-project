@@ -12,10 +12,9 @@ import pl.edu.pjwstk.s32410.library.shared.model.Book;
 import pl.edu.pjwstk.s32410.projects.library.app.service.SearchService;
 
 @Controller
-public class IndexController {
+public class WebsiteController {
 	@Autowired
 	private SearchService searchService;
-	
 	
     @GetMapping("/")
     public String getSearchPage(@RequestParam(value = "search", required = false) String search, Model model) {

@@ -1,14 +1,25 @@
 package pl.edu.pjwstk.s32410.library.api.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-import pl.edu.pjwstk.s32410.library.api.service.RentalService;
-import pl.edu.pjwstk.s32410.library.shared.model.Rental;
-
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import pl.edu.pjwstk.s32410.library.api.service.RentalService;
+import pl.edu.pjwstk.s32410.library.shared.model.Rental;
 
 @RestController
 @RequestMapping("/rentals")
@@ -23,13 +34,23 @@ public class RentalController {
     }
 
     @GetMapping("/{id}")
-    public Optional<Rental> getRentalById(@PathVariable UUID id) {
-        return rentalService.findById(id);
+    public ResponseEntity<Rental> getRentalById(@PathVariable UUID id) {
+    	Optional<Rental> rental = rentalService.findById(id);
+    	
+        return ResponseEntity.of(rental);
     }
 
     @PostMapping
     public Rental createRental(@RequestBody Rental rental) {
-        return rentalService.save(rental);
+    	rental.setId(null);
+    	
+    	return rentalService.save(rental);
+    }
+    
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateRental(@PathVariable UUID id) {
+        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED)
+        		.body("Rental updating is not supported! Please delete it first and create a new one!");
     }
 
     @DeleteMapping("/{id}")
@@ -52,11 +73,6 @@ public class RentalController {
         return rentalService.findByStartBetween(startDate, endDate);
     }
 
-    @GetMapping("/site/{siteId}")
-    public List<Rental> getRentalsBySiteId(@PathVariable UUID siteId) {
-        return rentalService.findBySiteId(siteId);
-    }
-
     @GetMapping("/employee/{employeeId}")
     public List<Rental> getRentalsByEmployeeId(@PathVariable UUID employeeId) {
         return rentalService.findByEmployeeId(employeeId);
@@ -75,11 +91,6 @@ public class RentalController {
     @GetMapping("/employee-name/{name}")
     public List<Rental> getRentalsByEmployeeName(@PathVariable String name) {
         return rentalService.findByEmployeeName(name);
-    }
-
-    @GetMapping("/site-name/{name}")
-    public List<Rental> getRentalsBySiteName(@PathVariable String name) {
-        return rentalService.findBySiteName(name);
     }
 
     @GetMapping("/book-category/{category}")
@@ -105,10 +116,5 @@ public class RentalController {
     @GetMapping("/overdue")
     public List<Rental> getOverdueRentals() {
         return rentalService.findOverdueRentals();
-    }
-
-    @GetMapping("/book-description/{description}")
-    public List<Rental> getRentalsByBookDescription(@PathVariable String description) {
-        return rentalService.findByBookDescription(description);
     }
 }

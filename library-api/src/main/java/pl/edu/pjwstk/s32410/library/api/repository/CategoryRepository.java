@@ -14,7 +14,4 @@ public interface CategoryRepository extends JpaRepository<Category, UUID> {
 
     @Query("SELECT c FROM Category c WHERE c.name LIKE %:name%")
     List<Category> findByNameContaining(String name);
-
-    @Query("SELECT c FROM Category c WHERE c.name = :name")
-    List<Category> findByExactName(String name);
 }

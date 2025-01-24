@@ -16,7 +16,11 @@ public interface RentalRepository extends JpaRepository<Rental, UUID> {
     List<Rental> findByStartBetween(Date startDate, Date endDate);
     List<Rental> findBySiteId(UUID siteId);
     List<Rental> findByEmployeeId(UUID employeeId);
-
+    List<Rental> findByBookReferenceId(UUID referenceId);
+    
+    @Query("SELECT r FROM Rental r WHERE r.book.id = :bookId AND ((r.start <= :end AND r.end >= :start) OR (r.start <= :end AND r.end IS NULL))")
+    List<Rental> findConflictingRentals(UUID bookId, Date start, Date end);
+    
     @Query("SELECT r FROM Rental r WHERE r.book.reference.title LIKE %:title%")
     List<Rental> findByBookTitle(String title);
 
@@ -35,15 +39,12 @@ public interface RentalRepository extends JpaRepository<Rental, UUID> {
     @Query("SELECT r FROM Rental r WHERE :author MEMBER OF r.book.reference.authors")
     List<Rental> findByAuthorName(String author);
 
-    @Query("SELECT r FROM Rental r WHERE r.end IS NULL")
+    @Query("SELECT r FROM Rental r WHERE r.returnDate IS NULL")
     List<Rental> findActiveRentals();
 
-    @Query("SELECT r FROM Rental r WHERE r.end IS NOT NULL")
+    @Query("SELECT r FROM Rental r WHERE r.returnDate IS NOT NULL")
     List<Rental> findCompletedRentals();
 
     @Query("SELECT r FROM Rental r WHERE r.end < CURRENT_DATE")
     List<Rental> findOverdueRentals();
-
-    @Query("SELECT r FROM Rental r WHERE r.book.reference.description LIKE %:description%")
-    List<Rental> findByBookDescription(String description);
 }

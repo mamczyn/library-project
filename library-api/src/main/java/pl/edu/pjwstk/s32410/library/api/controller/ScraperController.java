@@ -1,7 +1,6 @@
 
 package pl.edu.pjwstk.s32410.library.api.controller;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -25,16 +24,22 @@ import lombok.Getter;
 import pl.edu.pjwstk.s32410.library.api.service.AuthorService;
 import pl.edu.pjwstk.s32410.library.api.service.BookService;
 import pl.edu.pjwstk.s32410.library.api.service.CategoryService;
+import pl.edu.pjwstk.s32410.library.api.service.StorageBookService;
 import pl.edu.pjwstk.s32410.library.shared.json.JsonUtility;
 import pl.edu.pjwstk.s32410.library.shared.model.Author;
 import pl.edu.pjwstk.s32410.library.shared.model.Book;
 import pl.edu.pjwstk.s32410.library.shared.model.Category;
+import pl.edu.pjwstk.s32410.library.shared.model.StorageBook;
+import pl.edu.pjwstk.s32410.library.shared.random.RandomUtility;
 
 @RestController
 public class ScraperController {
 
     @Autowired
     private BookService bookService;
+    
+    @Autowired
+    private StorageBookService storageService;
 
     @Autowired
     private AuthorService authorService;
@@ -43,9 +48,9 @@ public class ScraperController {
     private CategoryService categoryService;
 
     @GetMapping("/scrape")
-    public String scrapeData(@RequestParam String source_url) {
+    public String scrapeData(@RequestParam String url) {
         try {
-            Document doc = Jsoup.connect(source_url).get();
+            Document doc = Jsoup.connect(url).get();
             Elements scriptElements = doc.select("script");
             Element scriptElement = null;
 
@@ -65,58 +70,69 @@ public class ScraperController {
             ObjectMapper objectMapper = new ObjectMapper();
             Listing listing = objectMapper.readValue(json, Listing.class);
             
+            int scrapedBookCount = 0;
+            
             for (Item item : listing.getItems()) {
             	System.out.println(JsonUtility.toJson(item));
             	
-                Book book = new Book();
-                book.setTitle(item.getName());
-                book.setImages(Collections.singletonList(item.getProductImageUrl()));
-                book.setDescription("Unknown");
-                book.setPublicationYear(0);
-                book.setIsbn(item.getCustom().getIsbn());
-                book.setLanguage("Unknown");
-                book.setPublisher(item.getCustom().getBrand());
-
-                // Handle author
-                Set<Author> authors = new HashSet<>();
-                Author author = new Author();
-                author.setName(item.getCustom().getAuthor().split(" ")[0]);
-                if (item.getCustom().getAuthor().split(" ").length > 1) {
-                    author.setSurname(item.getCustom().getAuthor().split(" ")[1]);
-                }
-
-                List<Author> existingAuthors = authorService.findByName(author.getName());
-                if (!existingAuthors.isEmpty()) {
-                    author = existingAuthors.get(0);
-                } else {
-                    author = authorService.save(author);
-                }
-                authors.add(author);
-                book.setAuthors(new ArrayList<>(authors));
-
-                // Handle categories
-                Set<Category> categories = new HashSet<>();
-                for (String categoryName : item.getTaxonomy()) {
-                    Category category = new Category();
-                    category.setName(categoryName);
-
-                    List<Category> existingCategories = categoryService.findByName(category.getName());
-                    if (!existingCategories.isEmpty()) {
-                        category = existingCategories.get(0);
-                    } else {
-                        category = categoryService.save(category);
-                    }
-                    categories.add(category);
-                }
-                book.setCategories(new ArrayList<>(categories));
-
-                bookService.save(book);
+            	try {
+	                Book book = new Book();
+	                book.setTitle(item.getName());
+	                book.setImages(Collections.singletonList(item.getProductImageUrl()));
+	                book.setDescription("The description could not be scraped!");
+	                book.setPublicationYear(0);
+	                book.setIsbn(item.getCustom().getIsbn());
+	                book.setLanguage("Polish");
+	                book.setPublisher(item.getCustom().getBrand());
+	
+	                Set<Author> authors = new HashSet<>();
+	                
+	                Author author = new Author();
+	                author.setName(item.getCustom().getAuthor().split(" ")[0]);
+	                
+	                if (item.getCustom().getAuthor().split(" ").length > 1) {
+	                    author.setSurname(item.getCustom().getAuthor().split(" ")[1]);
+	                }
+	
+	                List<Author> existingAuthors = authorService.findBySurname(author.getSurname());
+	                
+	                if (!existingAuthors.isEmpty()) author = existingAuthors.get(0);
+	                else author = authorService.save(author);
+	                
+	                authors.add(author);
+	                book.setAuthors(new ArrayList<>(authors));
+	
+	                Set<Category> categories = new HashSet<>();
+	                for (String categoryName : item.getTaxonomy()) {
+	                    Category category = new Category();
+	                    category.setName(categoryName);
+	
+	                    List<Category> existingCategories = categoryService.findByName(category.getName());
+	                    if (!existingCategories.isEmpty()) {
+	                        category = existingCategories.get(0);
+	                    } else {
+	                        category = categoryService.save(category);
+	                    }
+	                    categories.add(category);
+	                }
+	                book.setCategories(new ArrayList<>(categories));
+	
+	                Book result = bookService.save(book);
+	                
+	                StorageBook store = new StorageBook(null, result);
+	                
+	                int toStore = RandomUtility.number(0, 6);
+	                
+	                for(int i = 0; i < toStore; i++) {
+	                	storageService.save(store);
+	                }
+	                scrapedBookCount++;
+            	} catch(Exception e) { 
+            		System.out.println("There was an error saving scraped book %s : %s".formatted(item.getName(), e.getMessage())); 
+            	};
             }
 
-            return "Data scraped and saved successfully!";
-        } catch (IOException e) {
-            e.printStackTrace();
-            return "Error occurred while scraping data: " + e.getMessage();
+            return "Data scraped and saved successfully! (Scraped %s books)".formatted(scrapedBookCount);
         } catch (Exception e) {
             e.printStackTrace();
             return "Unexpected error occurred: " + e.getMessage();
@@ -133,12 +149,12 @@ public class ScraperController {
     @JsonIgnoreProperties(ignoreUnknown = true)
     @Getter
     public static class Item {
+    	@JsonProperty("product_image_url") private String productImageUrl;
         private String id;
         private String name;
         private List<String> taxonomy;
         private String currency;
         private String url;
-        @JsonProperty("product_image_url") private String productImageUrl;
         private Custom custom;
     }
 

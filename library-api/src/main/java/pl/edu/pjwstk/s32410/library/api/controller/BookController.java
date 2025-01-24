@@ -1,14 +1,23 @@
 package pl.edu.pjwstk.s32410.library.api.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import pl.edu.pjwstk.s32410.library.api.service.BookService;
-import pl.edu.pjwstk.s32410.library.shared.model.Book;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import pl.edu.pjwstk.s32410.library.api.exceptions.book.BookNotFoundException;
+import pl.edu.pjwstk.s32410.library.api.service.BookService;
+import pl.edu.pjwstk.s32410.library.shared.model.Book;
 
 @RestController
 @RequestMapping("/books")
@@ -25,28 +34,28 @@ public class BookController {
     @GetMapping("/{id}")
     public ResponseEntity<Book> getBookById(@PathVariable UUID id) {
         Optional<Book> book = bookService.findById(id);
-        return book.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        return ResponseEntity.of(book);
     }
 
     @PostMapping
     public Book createBook(@RequestBody Book book) {
-        return bookService.save(book);
+    	book.setId(null);
+    	
+    	return bookService.save(book);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Book> updateBook(@PathVariable UUID id, @RequestBody Book book) {
-        if (!bookService.findById(id).isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
+        if (!bookService.existsById(id)) throw new BookNotFoundException();
+        
         book.setId(id);
         return ResponseEntity.ok(bookService.save(book));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteBook(@PathVariable UUID id) {
-        if (!bookService.findById(id).isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
+        if (!bookService.existsById(id)) throw new BookNotFoundException();
+        
         bookService.deleteById(id);
         return ResponseEntity.noContent().build();
     }

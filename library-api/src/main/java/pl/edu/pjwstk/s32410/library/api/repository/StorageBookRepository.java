@@ -10,11 +10,7 @@ import pl.edu.pjwstk.s32410.library.shared.model.StorageBook;
 
 @Repository
 public interface StorageBookRepository extends JpaRepository<StorageBook, UUID> {
-    List<StorageBook> findBySiteId(UUID siteId);
     List<StorageBook> findByReferenceId(UUID referenceId);
-
-    @Query("SELECT sb FROM StorageBook sb WHERE sb.site.name LIKE %:siteName%")
-    List<StorageBook> findBySiteName(String siteName);
 
     @Query("SELECT sb FROM StorageBook sb WHERE sb.reference.title LIKE %:title%")
     List<StorageBook> findByBookTitle(String title);

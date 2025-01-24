@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,15 +44,24 @@ public class ImageController {
 
     @PostMapping
     public Image createImage(@RequestBody Image image) {
+    	image.setId(null);
     	image.setDateOfPublication(LocalDate.now());
-        return imageService.save(image);
+        
+    	return imageService.save(image);
+    }
+    
+    @PutMapping("/{id}")
+    public ResponseEntity<String> createImage(@PathVariable UUID id) {
+        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED)
+        		.body("Image updating is not supported!");
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteImage(@PathVariable UUID id) {
-        if (!imageService.findById(id).isPresent()) {
+        if (!imageService.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
+        
         imageService.deleteById(id);
         return ResponseEntity.noContent().build();
     }

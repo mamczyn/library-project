@@ -23,8 +23,5 @@ public class StorageBook {
     private UUID id;
 
     @ManyToOne
-    private Site site;
-
-    @ManyToOne
     private Book reference;
 }

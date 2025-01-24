@@ -25,9 +25,6 @@ public class Rental {
     private UUID id;
 
     @ManyToOne
-    private Site site;
-
-    @ManyToOne
     private StorageBook book;
 
     @ManyToOne

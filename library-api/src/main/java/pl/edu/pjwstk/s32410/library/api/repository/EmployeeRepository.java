@@ -14,7 +14,6 @@ public interface EmployeeRepository extends JpaRepository<Employee, UUID> {
     List<Employee> findBySurname(String surname);
     List<Employee> findByEmail(String email);
     List<Employee> findByPhoneNumber(String phoneNumber);
-    List<Employee> findBySiteId(UUID siteId);
 
     @Query("SELECT e FROM Employee e WHERE e.name LIKE %:name% OR e.surname LIKE %:name%")
     List<Employee> findByNameOrSurname(String name);

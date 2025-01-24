@@ -23,19 +23,17 @@ public class SearchService {
     @Autowired
     private AppConfig apiConfig;
 
-    public List<Book> searchBooks(String query) {
+    public List<Book> searchBooks(final String query) {
     	String json = restTemplate.getForObject(apiConfig.getApiBaseUrl() + "books", String.class);
         
         Gson gson = new Gson();
         
         List<Book> books = gson.fromJson(json, new TypeToken<List<Book>>() {});
         
-        final String q = query;
-        
-        return (query == null) ? books : books.stream().filter(book -> book.containsInTitle(q) ||
-                                book.containsInDescription(q) ||
-                                book.getAuthors().stream().anyMatch((author) -> author.containsInNameAndSurname(q)))
-                .collect(Collectors.toList());
+        return (query == null) ? books : books.stream().filter(book -> book.containsInTitle(query) ||
+				                                 book.containsInDescription(query) ||
+				                                 book.getAuthors().stream().anyMatch((author) -> author.containsInNameAndSurname(query)))
+                						.collect(Collectors.toList());
     }
 	
 }
