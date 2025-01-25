@@ -1,4 +1,4 @@
-package pl.edu.pjwstk.s32410.library.api.redis;
+package pl.edu.pjwstk.s32410.library.api.cache;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -8,7 +8,6 @@ import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 
 @Configuration
 public class RedisConfig {
-
     @Value("${spring.redis.host}")
     private String redisHost;
 

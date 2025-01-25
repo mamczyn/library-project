@@ -10,10 +10,10 @@ RUN mvn clean install
 # Maven Runner
 FROM openjdk:17-jdk-alpine
 
-WORKDIR /api
+WORKDIR /app
 
-COPY --from=builder /build/library-api/target/library-api-0.0.1-SNAPSHOT.jar api.jar
+COPY --from=builder /build/library-app/target/library-app-0.0.1-SNAPSHOT.jar app.jar
 
-EXPOSE 8080
+EXPOSE 8081
 
-ENTRYPOINT ["java", "-jar", "api.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]

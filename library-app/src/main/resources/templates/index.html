@@ -24,8 +24,8 @@
                     </h5>
                     <h5 class="description"></h5>
                     <div class="book-details-footer">
-                        <small class="isbn" th:text="'ISBN: ' + ${book.isbn}">ISBN: 4252514</small>
-                        <small class="availability">Dostepna</small>
+                        <small class="isbn" th:text="'ISBN: ' + ${book.isbn}">ISBN: 425251424554</small>
+                        <small class="availability" th:text="${storage[book.id]} + ' Egzemplarzy'">5 Egzemplarzy</small>
                     </div>
                 </div>
             </div>

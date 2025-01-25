@@ -14,7 +14,6 @@ public interface RentalRepository extends JpaRepository<Rental, UUID> {
     List<Rental> findByCustomerId(UUID customerId);
     List<Rental> findByBookId(UUID bookId);
     List<Rental> findByStartBetween(Date startDate, Date endDate);
-    List<Rental> findBySiteId(UUID siteId);
     List<Rental> findByEmployeeId(UUID employeeId);
     List<Rental> findByBookReferenceId(UUID referenceId);
     
@@ -29,9 +28,6 @@ public interface RentalRepository extends JpaRepository<Rental, UUID> {
 
     @Query("SELECT r FROM Rental r WHERE r.employee.name LIKE %:name% OR r.employee.surname LIKE %:name%")
     List<Rental> findByEmployeeName(String name);
-
-    @Query("SELECT r FROM Rental r WHERE r.site.name LIKE %:name%")
-    List<Rental> findBySiteName(String name);
 
     @Query("SELECT r FROM Rental r WHERE :category MEMBER OF r.book.reference.categories")
     List<Rental> findByBookCategory(String category);

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 import org.jsoup.Jsoup;
@@ -30,7 +31,6 @@ import pl.edu.pjwstk.s32410.library.shared.model.Author;
 import pl.edu.pjwstk.s32410.library.shared.model.Book;
 import pl.edu.pjwstk.s32410.library.shared.model.Category;
 import pl.edu.pjwstk.s32410.library.shared.model.StorageBook;
-import pl.edu.pjwstk.s32410.library.shared.random.RandomUtility;
 
 @RestController
 public class ScraperController {
@@ -119,12 +119,13 @@ public class ScraperController {
 	
 	                Book result = bookService.save(book);
 	                
-	                StorageBook store = new StorageBook(null, result);
-	                
-	                int toStore = RandomUtility.number(0, 6);
+	                Random rand = new Random();
+
+	                int n = 6;
+	                int toStore = (int)(Math.random() * n);
 	                
 	                for(int i = 0; i < toStore; i++) {
-	                	storageService.save(store);
+	                	storageService.save(new StorageBook(null, result));
 	                }
 	                scrapedBookCount++;
             	} catch(Exception e) { 

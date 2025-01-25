@@ -14,7 +14,6 @@ public interface CustomerRepository extends JpaRepository<Customer, UUID> {
     List<Customer> findBySurname(String surname);
     List<Customer> findByEmail(String email);
     List<Customer> findByPhoneNumber(String phoneNumber);
-    List<Customer> findBySiteId(UUID siteId);
 
     @Query("SELECT c FROM Customer c WHERE c.name LIKE %:name% OR c.surname LIKE %:name%")
     List<Customer> findByNameOrSurname(String name);

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import pl.edu.pjwstk.s32410.library.api.exceptions.rental.RentalNotFoundException;
 import pl.edu.pjwstk.s32410.library.api.service.RentalService;
 import pl.edu.pjwstk.s32410.library.shared.model.Rental;
 
@@ -54,8 +55,11 @@ public class RentalController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteRental(@PathVariable UUID id) {
+    public ResponseEntity<Void> deleteRental(@PathVariable UUID id) {
+        if (!rentalService.existsById(id)) throw new RentalNotFoundException();
+        
         rentalService.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/customer/{customerId}")

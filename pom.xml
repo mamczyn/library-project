@@ -6,7 +6,6 @@
   <packaging>pom</packaging>
   <modules>
   	<module>library-shared</module>
-  	<module>library-communication</module>
   	<module>library-api</module>
   	<module>library-app</module>
   </modules>

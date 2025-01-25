@@ -133,7 +133,7 @@ public class RentalService {
     }
     
     public boolean canRent(UUID bookId, Date start, Date end) {
-    	return rentalRepository.findConflictingRentals(bookId, start, end).size() == 0;
+    	return findConflictingRentals(bookId, start, end).size() == 0;
     }
     
     private boolean checkDates(Date start, Date end) {
