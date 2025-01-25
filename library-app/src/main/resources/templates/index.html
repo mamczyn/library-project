@@ -16,7 +16,7 @@
             <div th:each="book : ${results}" class="book-card">
                 <img class="cover" th:src="${book.images[0]}">
                 <div class="book-details">
-                    <h2 class="title"><a href="test" th:text="${book.title}">Podstawowy tytul</a></h2>
+                    <h2 class="title"><a href="#" th:text="${book.title}">Podstawowy tytul</a></h2>
                     <h5 class="authors">
                         <span th:each="author : ${book.authors}">
                             <a th:text="|${author.name} ${author.surname}|" th:href="@{|/?search=${author.name} ${author.surname}|}">Podstawowy autor</a>
@@ -25,7 +25,7 @@
                     <h5 class="description"></h5>
                     <div class="book-details-footer">
                         <small class="isbn" th:text="'ISBN: ' + ${book.isbn}">ISBN: 425251424554</small>
-                        <small class="availability" th:text="${storage[book.id]} + ' Egzemplarzy'">5 Egzemplarzy</small>
+                        <small class="availability" th:text="${storage[book.id]} + ' Egzemplarze'">5 Egzemplarzy</small>
                     </div>
                 </div>
             </div>
