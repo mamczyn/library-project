@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Library APP</title>
+    <link th:href="@{/styles/main.css}" href="../static/styles/main.css" rel="stylesheet" />
+    <script th:src="@{/scripts/main.js}" href="../static/scripts/main.js"></script>
+</head>
+
+<body class="dark">
+    <div id="content">
+        <div id="server-message" class="active">
+            <h5>Wiadomosc zwrotna wyswietlana jest tutaj...</h5>
+        </div>
+        <div th:each="formEntry : ${forms}" class="insert-form-container">
+            <h2 th:text="${formEntry.value.title}">Wprowadz Dane</h2>
+            <form method="post" th:action="@{/submit-form}">
+                <div class="scroll-container">
+                    <input type="hidden" th:name="formId" th:value="${formEntry.key}">
+    
+                    <input
+                        th:each="input : ${formEntry.value.inputs}"
+                        th:if="${input.value.type != T(pl.edu.pjwstk.s32410.projects.library.app.controller.data.input.DataInput.Type).SELECT}"
+                        th:type="${input.value.type == T(pl.edu.pjwstk.s32410.projects.library.app.controller.data.input.DataInput.Type).TEXT ? 'text' : 
+                                        (input.value.type == T(pl.edu.pjwstk.s32410.projects.library.app.controller.data.input.DataInput.Type).NUMBER ? 'number' : 'text')}"
+                        th:placeholder="${input.value.placeholder}" 
+                        th:name="${input.key}" />
+
+                    <select
+                        th:each="input : ${formEntry.value.inputs}"
+                        th:if="${input.value.type == T(pl.edu.pjwstk.s32410.projects.library.app.controller.data.input.DataInput.Type).SELECT}"
+                        th:name="${input.key}">
+                        <option th:each="option : ${input.value.options}" th:selected="${option.key.equals('default')}" th:value="${option.key}" th:text="${option.value}"></option>
+                    </select>
+                </div>
+                <button class="button-primary" type="submit">Wprowadź</button>
+            </form>
+        </div>
+
+
+        <div class="insert-form-container">
+            <a class="button-primary" th:href="@{/data?resource=author}">Wyświetl Autorów</a>
+            <a class="button-primary" th:href="@{/data?resource=category}">Wyświetl Kategorie</a>
+            <a class="button-primary" th:href="@{/data?resource=image}">Wyświetl Zdjęcia</a>
+            <a class="button-primary" th:href="@{/data?resource=customer}">Wyświetl Użytkowników</a>
+            <a class="button-primary" th:href="@{/data?resource=rental}">Wyświetl Wynajmy</a>
+            <a class="button-primary" th:href="@{/data?resource=employee}">Wyświetl Pracowników</a>
+            <a class="button-primary" th:href="@{/data?resource=book}">Wyświetl Książki</a>
+
+        </div>
+    </div>
+</body>
+
+</html>

@@ -39,7 +39,7 @@ public class Book {
     private String isbn = "Unknown";
     private String language = "English";
     private String publisher = "Unknown";
-    private List<String> images;
+    private List<String> images = new ArrayList<>();;
     
     public boolean containsInTitle(String query) {
     	if(title == null || query == null) return false;

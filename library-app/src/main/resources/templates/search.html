@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Library APP</title>
+    <link th:href="@{/styles/main.css}" href="../static/styles/main.css" rel="stylesheet" />
+</head>
+
+<body class="dark">
+    <div id="content">
+        <div id="top-bar-container">
+            <h2><a th:href="@{/}" href="#">LibraryAPP</a></h2>
+            <input th:value="${search}" id="search-bar" type="text" placeholder="Wyszukaj książki tutaj...">
+            <a th:href="@{/forms}" href="#" class="button-primary">Wprowadź Dane</a>
+        </div>
+
+        <div th:each="book : ${results}" class="book-card">
+            <img class="cover" th:src="${book.images[0]}">
+            <div class="book-details">
+                <h2 class="title"><a href="#" th:text="${book.title}">Podstawowy tytul</a></h2>
+                <h5 class="authors">
+                    <span th:each="author : ${book.authors}">
+                        <a th:text="|${author.name} ${author.surname}|" th:href="@{|/?search=${author.name} ${author.surname}|}">Podstawowy autor</a>
+                    </span>
+                </h5>
+                <h5 class="description"></h5>
+                <div class="book-details-footer">
+                    <small class="isbn" th:text="'ISBN: ' + ${book.isbn}">ISBN: 425251424554</small>
+                    <small class="availability" th:text="${storage[book.id]} + ' Egzemplarze'">5 Egzemplarzy</small>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    <script>
+        const searchBar = document.getElementById('search-bar');
+
+        searchBar.addEventListener('keypress', function (event) {
+            if (event.key === 'Enter') {
+                const query = searchBar.value.trim();
+                if (query) {
+                    window.location.href = `?search=${encodeURIComponent(query)}`;
+                }
+            }
+        });
+    </script>
+</body>
+</html>

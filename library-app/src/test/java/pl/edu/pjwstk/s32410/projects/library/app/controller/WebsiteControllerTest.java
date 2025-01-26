@@ -62,7 +62,7 @@ class WebsiteControllerTest {
 
         mockMvc.perform(get("/").param("search", "Book1"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("index"))
+                .andExpect(view().name("search"))
                 .andExpect(model().attributeExists("search"))
                 .andExpect(model().attributeExists("results"))
                 .andExpect(model().attributeExists("storage"));
