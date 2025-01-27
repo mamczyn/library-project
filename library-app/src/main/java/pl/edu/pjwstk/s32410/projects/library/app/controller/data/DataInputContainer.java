@@ -42,7 +42,12 @@ public abstract class DataInputContainer {
 					input.check(null);
 				}
 				else if(input instanceof NumberInput) {
-					((NumberInput) input).check(Integer.valueOf(value));
+					try {
+						int intVal = Integer.valueOf(value);
+						((NumberInput) input).check(intVal);
+					} catch(Exception e) {
+						((NumberInput) input).check(0);
+					}
 				}
 				else {
 					((DataInput<String>) input).check(value);

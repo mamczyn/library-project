@@ -1,7 +1,9 @@
 package pl.edu.pjwstk.s32410.projects.library.app.controller;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,13 +37,6 @@ import pl.edu.pjwstk.s32410.projects.library.app.service.LibraryService;
 public class WebsiteController {
 	@Autowired
 	private LibraryService service;
-	
-	@GetMapping("/data")
-    public String getDataPage(String message, Model model) {
-		
-		
-        return "data";
-    }
 	
 	@GetMapping("/forms")
     public String getFormsPage(Model model) {
@@ -80,7 +75,7 @@ public class WebsiteController {
 			String dataId = form.checkAndSend(data); 
 			model.addAttribute("message", "Pomyslnie wprowadzono wartosc o ID: " + dataId);
 		}
-		catch(DataInputException e) {
+		catch(Exception e) {
 			model.addAttribute("message", e.getMessage());
 		}
 		
@@ -145,7 +140,11 @@ public class WebsiteController {
 				
 				book = JsonUtility.fromJson(response, Book.class);
 				
-				int booksToStorage = Integer.valueOf(data.get("count"));
+				int booksToStorage = 0;
+				
+				try {
+					booksToStorage = Integer.valueOf(data.get("count"));
+				} catch(Exception e) {}
 				
 				for(int i = 0; i < booksToStorage; i++) {
 					StorageBook sb = new StorageBook();
@@ -176,7 +175,7 @@ public class WebsiteController {
 		}, authors));
 		
 		form.add("category", new SelectInput("Kategoria", (v) -> {
-			if(v == null || v.trim().equals("")) throw new DataInputException("Kategoria ksiazki musi byc wybrana!");
+			if(v == null || v.trim().equals("default")) throw new DataInputException("Kategoria ksiazki musi byc wybrana!");
 		}, categories));
 		
 		form.add("image", new TextInput("Link Obrazka"));
@@ -216,8 +215,8 @@ public class WebsiteController {
     		    rental.setBook(book);
     		    rental.setCustomer(customer);
     		    rental.setEmployee(employee);
-    		    rental.setStart(startDate);
-    		    rental.setEnd(endDate);
+    		    rental.setRentalStart(Date.from(startDate.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+    		    rental.setRentalEnd(Date.from(endDate.atStartOfDay(ZoneId.systemDefault()).toInstant()));
     		    
     		    String response = service.postJSONToAPI("rentals", rental);
     		    rental = JsonUtility.fromJson(response, Rental.class);
@@ -244,11 +243,11 @@ public class WebsiteController {
 		}, books));
 		
 		form.add("customer", new SelectInput("Klient", (v) -> {
-			if(v == null || v.trim().equals("")) throw new DataInputException("Klient musi byc wybrany!");
+			if(v == null || v.trim().equals("default")) throw new DataInputException("Klient musi byc wybrany!");
 		}, customers));
 		
 		form.add("employee", new SelectInput("Pracownik", (v) -> {
-			if(v == null || v.trim().equals("")) throw new DataInputException("Pracownik musi byc wybrany!");
+			if(v == null || v.trim().equals("default")) throw new DataInputException("Pracownik musi byc wybrany!");
 		}, employees));
 		
 		form.add("start", new TextInput("Start (DD.MM.YYYY)", (v) -> {
@@ -306,12 +305,12 @@ public class WebsiteController {
     		    String response = service.postJSONToAPI("images", image);
     		    image = JsonUtility.fromJson(response, Image.class);
     		    
-    		    return image.getId().toString();
+    		    return "http://localhost:8080/images/" + image.getId().toString();
     		}
     		
     	};
 		
-		form.add("image", new TextInput("Obrazek", (v) -> {
+		form.add("image", new TextInput("Obrazek (Base64)", (v) -> {
 			if(v == null || v.trim().equals("")) throw new DataInputException("Base64 obrazka nie moze byc pusty!");
 		}));
 		

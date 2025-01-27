@@ -79,8 +79,8 @@ public class RentalServiceTest {
         rental.setEmployee(new Employee());
         rental.setCustomer(new Customer());
         rental.setBook(new StorageBook());
-        rental.setStart(LocalDate.now());
-        rental.setEnd(LocalDate.now().plusDays(30));
+        rental.setRentalStart(new Date(System.currentTimeMillis()));
+        rental.setRentalEnd(new Date(System.currentTimeMillis() + 86400000L * 2));
 
         when(employeeService.exists(any(Employee.class))).thenReturn(true);
         when(customerService.exists(any(Customer.class))).thenReturn(true);

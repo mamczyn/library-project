@@ -12,11 +12,11 @@ import java.util.UUID;
 @Repository
 public interface RentalRepository extends JpaRepository<Rental, UUID> {
     List<Rental> findByCustomerId(UUID customerId);
-    List<Rental> findByStartBetween(Date startDate, Date endDate);
+    List<Rental> findByRentalStartBetween(Date startDate, Date endDate);
     List<Rental> findByEmployeeId(UUID employeeId);
     List<Rental> findByBookReferenceId(UUID referenceId);
     
-    @Query("SELECT r FROM Rental r WHERE r.book.reference = :bookId")
+    @Query("SELECT r FROM Rental r WHERE r.book.id = :bookId")
     List<Rental> findByBookId(UUID bookId);
     
     @Query("SELECT r FROM Rental r WHERE r.book.reference.title LIKE %:title%")
@@ -40,6 +40,6 @@ public interface RentalRepository extends JpaRepository<Rental, UUID> {
     @Query("SELECT r FROM Rental r WHERE r.returnDate IS NOT NULL")
     List<Rental> findCompletedRentals();
 
-    @Query("SELECT r FROM Rental r WHERE r.end < CURRENT_DATE")
+    @Query("SELECT r FROM Rental r WHERE r.rentalEnd < CURRENT_DATE")
     List<Rental> findOverdueRentals();
 }

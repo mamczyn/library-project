@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -24,7 +25,7 @@ public class Image {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    private LocalDate dateOfPublication;
+    private Date dateOfPublication;
 
     @NotNull
     @Lob

@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import pl.edu.pjwstk.s32410.library.api.exceptions.book.BookNotFoundException;
@@ -61,8 +60,8 @@ public class RentalService {
     	Employee empolyee = rental.getEmployee();
     	Customer customer = rental.getCustomer();
     	StorageBook book = rental.getBook();
-    	LocalDate start = rental.getStart();
-    	LocalDate end = rental.getEnd();
+    	Date start = rental.getRentalStart();
+    	Date end = rental.getRentalEnd();
     	
     	if(!employees.exists(empolyee)) throw new EmployeeNotFoundException();
     	if(!customers.exists(customer)) throw new CustomerNotFoundException();
@@ -92,7 +91,7 @@ public class RentalService {
     }
 
     public List<Rental> findByStartBetween(Date startDate, Date endDate) {
-        return rentalRepository.findByStartBetween(startDate, endDate);
+        return rentalRepository.findByRentalStartBetween(startDate, endDate);
     }
     
     public List<Rental> findByEmployeeId(UUID employeeId) {
@@ -131,17 +130,17 @@ public class RentalService {
         return rentalRepository.findOverdueRentals();
     }
     
-    public List<Rental> findConflictingRentals(UUID bookId, LocalDate start, LocalDate end) {
+    public List<Rental> findConflictingRentals(UUID bookId, Date start, Date end) {
     	return rentalRepository.findByBookId(bookId).stream().filter(r -> 
-        		(r.getStart().compareTo(end) <= 0 && (r.getEnd() == null || r.getEnd().compareTo(start) >= 0)))
+    	(r.getRentalStart().compareTo(end) <= 0 && (r.getRentalEnd() == null || r.getRentalEnd().compareTo(start) >= 0)))
     			.collect(Collectors.toList());
     }
     
-    public boolean canRent(UUID bookId, LocalDate start, LocalDate end) {
+    public boolean canRent(UUID bookId, Date start, Date end) {
     	return findConflictingRentals(bookId, start, end).size() == 0;
     }
     
-    private boolean checkDates(LocalDate start, LocalDate end) {
-    	return (start != null && end != null && start.isBefore(end));
+    private boolean checkDates(Date start, Date end) {
+    	return (start != null && end != null && start.before(end));
     }
 }

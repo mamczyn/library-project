@@ -35,10 +35,10 @@ public class Rental {
     private Employee employee;
 
     @NotNull
-    private LocalDate start;
+    private Date rentalStart;
     
     @NotNull
-    private LocalDate end;
+    private Date rentalEnd;
     
-    private LocalDate returnDate;
+    private Date returnDate;
 }
