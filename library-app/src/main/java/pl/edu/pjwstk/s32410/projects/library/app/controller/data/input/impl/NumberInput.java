@@ -10,4 +10,7 @@ public class NumberInput extends DataInput<Integer> {
 		super(DataInput.Type.NUMBER, title, checker);
 	}
 
+	public NumberInput(String title) {
+		super(DataInput.Type.NUMBER, title);
+	}
 }

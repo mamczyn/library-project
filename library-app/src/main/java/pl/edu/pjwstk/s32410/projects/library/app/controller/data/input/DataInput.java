@@ -10,7 +10,6 @@ import lombok.Setter;
 public class DataInput<T> {
 	private Consumer<T> checker = (v) -> {};
 	private String placeholder;
-	private T value;
 	private Type type;
 	
 	public DataInput(Type type, String placeholder, Consumer<T> checker) {
@@ -23,7 +22,7 @@ public class DataInput<T> {
 		this(type, placeholder, (v) -> {});
 	}
 
-	public void check() {
+	public void check(T value) {
 		checker.accept(value);
 	}
 	

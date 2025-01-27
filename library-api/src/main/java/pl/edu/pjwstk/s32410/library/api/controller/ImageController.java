@@ -2,6 +2,7 @@ package pl.edu.pjwstk.s32410.library.api.controller;
 
 import java.time.LocalDate;
 import java.util.Base64;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import pl.edu.pjwstk.s32410.library.api.service.ImageService;
+import pl.edu.pjwstk.s32410.library.shared.model.Employee;
 import pl.edu.pjwstk.s32410.library.shared.model.Image;
 
 @RestController
@@ -28,6 +30,11 @@ public class ImageController {
 
     @Autowired
     private ImageService imageService;
+    
+    @GetMapping
+    public List<Image> getAllImages() {
+        return imageService.findAll();
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<byte[]> getImageById(@PathVariable UUID id) {

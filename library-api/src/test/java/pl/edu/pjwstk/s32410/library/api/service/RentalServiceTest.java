@@ -8,6 +8,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -78,14 +79,14 @@ public class RentalServiceTest {
         rental.setEmployee(new Employee());
         rental.setCustomer(new Customer());
         rental.setBook(new StorageBook());
-        rental.setStart(new Date(System.currentTimeMillis()));
-        rental.setEnd(new Date(System.currentTimeMillis() + 86400000L * 2));
+        rental.setStart(LocalDate.now());
+        rental.setEnd(LocalDate.now().plusDays(30));
 
         when(employeeService.exists(any(Employee.class))).thenReturn(true);
         when(customerService.exists(any(Customer.class))).thenReturn(true);
         when(storageBookService.exists(any(StorageBook.class))).thenReturn(true);
         when(rentalRepository.save(rental)).thenReturn(rental);
-        when(rentalRepository.findConflictingRentals(any(UUID.class), any(Date.class), any(Date.class)))
+        when(rentalRepository.findByBookId(any(UUID.class)))
             .thenReturn(List.of());
 
         assertEquals(rental, rentalService.save(rental));

@@ -12,13 +12,12 @@ import java.util.UUID;
 @Repository
 public interface RentalRepository extends JpaRepository<Rental, UUID> {
     List<Rental> findByCustomerId(UUID customerId);
-    List<Rental> findByBookId(UUID bookId);
     List<Rental> findByStartBetween(Date startDate, Date endDate);
     List<Rental> findByEmployeeId(UUID employeeId);
     List<Rental> findByBookReferenceId(UUID referenceId);
     
-    @Query("SELECT r FROM Rental r WHERE r.book.id = :bookId AND ((r.start <= :end AND r.end >= :start) OR (r.start <= :end AND r.end IS NULL))")
-    List<Rental> findConflictingRentals(UUID bookId, Date start, Date end);
+    @Query("SELECT r FROM Rental r WHERE r.book.reference = :bookId")
+    List<Rental> findByBookId(UUID bookId);
     
     @Query("SELECT r FROM Rental r WHERE r.book.reference.title LIKE %:title%")
     List<Rental> findByBookTitle(String title);

@@ -9,14 +9,14 @@
 
 <body class="dark">
     <div id="content">
-        <div id="server-message" class="active">
-            <h5>Wiadomosc zwrotna wyswietlana jest tutaj...</h5>
+        <div th:if="${message != null}" id="server-message" class="active">
+            <h5 th:text="${message}">Wiadomosc zwrotna wyswietlana jest tutaj...</h5>
         </div>
         <div th:each="formEntry : ${forms}" class="insert-form-container">
             <h2 th:text="${formEntry.value.title}">Wprowadz Dane</h2>
-            <form method="post" th:action="@{/submit-form}">
+            <form method="post" th:action="@{/forms}">
                 <div class="scroll-container">
-                    <input type="hidden" th:name="formId" th:value="${formEntry.key}">
+                    <input type="hidden" th:name="id" th:value="${formEntry.key}">
     
                     <input
                         th:each="input : ${formEntry.value.inputs}"

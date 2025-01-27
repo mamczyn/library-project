@@ -1,13 +1,16 @@
 package pl.edu.pjwstk.s32410.library.api.service;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import pl.edu.pjwstk.s32410.library.api.exceptions.book.BookNotFoundException;
@@ -58,8 +61,8 @@ public class RentalService {
     	Employee empolyee = rental.getEmployee();
     	Customer customer = rental.getCustomer();
     	StorageBook book = rental.getBook();
-    	Date start = rental.getStart();
-    	Date end = rental.getEnd();
+    	LocalDate start = rental.getStart();
+    	LocalDate end = rental.getEnd();
     	
     	if(!employees.exists(empolyee)) throw new EmployeeNotFoundException();
     	if(!customers.exists(customer)) throw new CustomerNotFoundException();
@@ -128,15 +131,17 @@ public class RentalService {
         return rentalRepository.findOverdueRentals();
     }
     
-    public List<Rental> findConflictingRentals(UUID bookId, Date start, Date end) {
-    	return rentalRepository.findConflictingRentals(bookId, start, end);
+    public List<Rental> findConflictingRentals(UUID bookId, LocalDate start, LocalDate end) {
+    	return rentalRepository.findByBookId(bookId).stream().filter(r -> 
+        		(r.getStart().compareTo(end) <= 0 && (r.getEnd() == null || r.getEnd().compareTo(start) >= 0)))
+    			.collect(Collectors.toList());
     }
     
-    public boolean canRent(UUID bookId, Date start, Date end) {
+    public boolean canRent(UUID bookId, LocalDate start, LocalDate end) {
     	return findConflictingRentals(bookId, start, end).size() == 0;
     }
     
-    private boolean checkDates(Date start, Date end) {
-    	return (start != null && end != null && start.before(end));
+    private boolean checkDates(LocalDate start, LocalDate end) {
+    	return (start != null && end != null && start.isBefore(end));
     }
 }

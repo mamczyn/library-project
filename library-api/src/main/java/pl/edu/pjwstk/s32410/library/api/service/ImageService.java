@@ -1,5 +1,6 @@
 package pl.edu.pjwstk.s32410.library.api.service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -9,6 +10,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import pl.edu.pjwstk.s32410.library.api.repository.ImageRepository;
+import pl.edu.pjwstk.s32410.library.shared.model.Employee;
 import pl.edu.pjwstk.s32410.library.shared.model.Image;
 
 @Service
@@ -23,6 +25,10 @@ public class ImageService {
     
     public boolean existsById(UUID id) {
     	return imageRepository.existsById(id);
+    }
+    
+    public List<Image> findAll() {
+        return imageRepository.findAll();
     }
     
     @Cacheable(value = "image", key = "#id", unless = "#result == null")

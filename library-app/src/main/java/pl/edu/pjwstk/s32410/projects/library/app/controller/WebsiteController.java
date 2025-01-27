@@ -1,5 +1,7 @@
 package pl.edu.pjwstk.s32410.projects.library.app.controller;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,9 +15,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import pl.edu.pjwstk.s32410.library.shared.json.JsonUtility;
+import pl.edu.pjwstk.s32410.library.shared.model.Author;
 import pl.edu.pjwstk.s32410.library.shared.model.Book;
+import pl.edu.pjwstk.s32410.library.shared.model.Category;
+import pl.edu.pjwstk.s32410.library.shared.model.Customer;
+import pl.edu.pjwstk.s32410.library.shared.model.Employee;
+import pl.edu.pjwstk.s32410.library.shared.model.Image;
+import pl.edu.pjwstk.s32410.library.shared.model.Rental;
+import pl.edu.pjwstk.s32410.library.shared.model.StorageBook;
 import pl.edu.pjwstk.s32410.projects.library.app.controller.data.DataInputContainer;
 import pl.edu.pjwstk.s32410.projects.library.app.controller.data.exception.DataInputException;
+import pl.edu.pjwstk.s32410.projects.library.app.controller.data.input.impl.NumberInput;
 import pl.edu.pjwstk.s32410.projects.library.app.controller.data.input.impl.SelectInput;
 import pl.edu.pjwstk.s32410.projects.library.app.controller.data.input.impl.TextInput;
 import pl.edu.pjwstk.s32410.projects.library.app.service.LibraryService;
@@ -26,17 +37,23 @@ public class WebsiteController {
 	private LibraryService service;
 	
 	@GetMapping("/data")
-    public String getDataPage(@RequestParam(value = "message", required = false) String message, Model model) {
+    public String getDataPage(String message, Model model) {
 		
 		
         return "data";
     }
 	
 	@GetMapping("/forms")
-    public String getFormsPage(@RequestParam(value = "resource", required = false) String resource, Model model) {
+    public String getFormsPage(Model model) {
 		HashMap<String, DataInputContainer> forms = new HashMap<>();
 		
 		forms.put("author", getAuthorForm());
+		forms.put("category", getCategoryForm());
+		forms.put("image", getImageForm());
+		forms.put("book", getBookForm());
+		forms.put("customer", getCustomerForm());
+		forms.put("employee", getEmployeeForm());
+		forms.put("rental", getRentalForm());
 		
 		model.addAttribute("forms", forms);
 		
@@ -44,12 +61,38 @@ public class WebsiteController {
     }
 	
 	@PostMapping("/forms")
-    public String getFormsPageSubmit(String resource, Model model) {
+    public String getFormsPageSubmit(@RequestParam Map<String, String> data, Model model) {
 		HashMap<String, DataInputContainer> forms = new HashMap<>();
 		
 		forms.put("author", getAuthorForm());
+		forms.put("category", getCategoryForm());
+		forms.put("image", getImageForm());
+		forms.put("book", getBookForm());
+		forms.put("customer", getCustomerForm());
+		forms.put("employee", getEmployeeForm());
+		forms.put("rental", getRentalForm());
 		
+		String id = data.get("id");
 		
+		DataInputContainer form = forms.get(id);
+		
+		try { 
+			String dataId = form.checkAndSend(data); 
+			model.addAttribute("message", "Pomyslnie wprowadzono wartosc o ID: " + dataId);
+		}
+		catch(DataInputException e) {
+			model.addAttribute("message", e.getMessage());
+		}
+		
+		forms.put("author", getAuthorForm());
+		forms.put("category", getCategoryForm());
+		forms.put("image", getImageForm());
+		forms.put("book", getBookForm());
+		forms.put("customer", getCustomerForm());
+		forms.put("employee", getEmployeeForm());
+		forms.put("rental", getRentalForm());
+		
+		model.addAttribute("forms", forms);
 		
         return "forms";
     }
@@ -80,55 +123,168 @@ public class WebsiteController {
     }
     
     private DataInputContainer getBookForm() {
-    	DataInputContainer form = new DataInputContainer("Dodaj Ksiazke");
+    	DataInputContainer form = new DataInputContainer("Dodaj Ksiazke") {
+
+			@Override
+			public String OnDataCorrectSubmission(Map<String, String> data) {
+				Book book = new Book();
+				
+				Author author = new Author();
+				author.setId(UUID.fromString(data.get("author")));
+				
+				Category category = new Category();
+				category.setId(UUID.fromString(data.get("category")));
+				
+				book.setTitle(data.get("title"));
+				book.setIsbn(data.get("isbn"));
+				book.setAuthors(List.of(author));
+				book.setCategories(List.of(category));
+				book.setImages(List.of(data.get("image")));
+				
+				String response = service.postJSONToAPI("books", book);
+				
+				book = JsonUtility.fromJson(response, Book.class);
+				
+				int booksToStorage = Integer.valueOf(data.get("count"));
+				
+				for(int i = 0; i < booksToStorage; i++) {
+					StorageBook sb = new StorageBook();
+					sb.setReference(book);
+					service.postJSONToAPI("storage-books", sb);
+				}
+	
+				return book.getId().toString();
+			}
+    		
+    	};
 		
+    	Map<String, String> authors = service.getAuthors().stream()
+    			.collect(Collectors.toMap(a -> a.getId().toString(),
+    					a -> a.getName() + " " + a.getSurname()));
+    	
+    	Map<String, String> categories = service.getCategories().stream()
+    			.collect(Collectors.toMap(c -> c.getId().toString(),
+    					c -> c.getName()));
+    	
+    	
 		form.add("title", new TextInput("Tytul", (v) -> {
 			if(v == null || v.trim().equals("")) throw new DataInputException("Tytul ksiazki nie moze byc pusty!");
 		}));
 		
 		form.add("author", new SelectInput("Autor", (v) -> {
 			if(v == null || v.trim().equals("default")) throw new DataInputException("Autor ksiazki musi byc wybrany!");
-		}));
+		}, authors));
 		
 		form.add("category", new SelectInput("Kategoria", (v) -> {
 			if(v == null || v.trim().equals("")) throw new DataInputException("Kategoria ksiazki musi byc wybrana!");
-		}));
+		}, categories));
 		
 		form.add("image", new TextInput("Link Obrazka"));
 		
 		form.add("isbn", new TextInput("ISBN"));
 		
+		form.add("count", new NumberInput("Ilosc Egzemplarzy"));
+		
 		return form;
     }
     
     private DataInputContainer getRentalForm() {
-    	DataInputContainer form = new DataInputContainer("Dodaj Wypozyczenie");
+    	DataInputContainer form = new DataInputContainer("Dodaj Wypozyczenie") {
+
+    		@Override
+    		public String OnDataCorrectSubmission(Map<String, String> data) {
+    		    Rental rental = new Rental();
+    		    
+    		    StorageBook book = new StorageBook();
+    		    book.setId(UUID.fromString(data.get("book")));
+    		    
+    		    Customer customer = new Customer();
+    		    customer.setId(UUID.fromString(data.get("customer")));
+    		    
+    		    Employee employee = new Employee();
+    		    employee.setId(UUID.fromString(data.get("employee")));
+    		    
+    		    LocalDate startDate = null;
+    		    LocalDate endDate = null;
+    		    try {
+    		        startDate = LocalDate.parse(data.get("start"), DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+    		        endDate = LocalDate.parse(data.get("end"), DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+    		    } catch (Exception e) {
+    		        throw new DataInputException("Niepoprawny format daty!");
+    		    }
+    		    
+    		    rental.setBook(book);
+    		    rental.setCustomer(customer);
+    		    rental.setEmployee(employee);
+    		    rental.setStart(startDate);
+    		    rental.setEnd(endDate);
+    		    
+    		    String response = service.postJSONToAPI("rentals", rental);
+    		    rental = JsonUtility.fromJson(response, Rental.class);
+    		    
+    		    return rental.getId().toString();
+    		}
+    		
+    	};
 		
-		form.add("start", new TextInput("Start", (v) -> {
-			if(v == null || v.trim().equals("")) throw new DataInputException("Data startu wypozyczenia nie moze byc pusta!");
-		}));
-		
-		form.add("end", new TextInput("Koniec", (v) -> {
-			if(v == null || v.trim().equals("")) throw new DataInputException("Data konca wypozyczenia nie moze byc pusta!");
-		}));
-		
+    	Map<String, String> books = service.getStorageBooks().stream()
+    			.collect(Collectors.toMap(b -> b.getId().toString(),
+    					b -> "%s [%s]".formatted(b.getReference().getTitle(), b.getId())));
+    	
+    	Map<String, String> customers = service.getCustomers().stream()
+    			.collect(Collectors.toMap(c -> c.getId().toString(),
+    					c -> c.getName() + " " + c.getSurname()));
+    	
+    	Map<String, String> employees = service.getEmployees().stream()
+    			.collect(Collectors.toMap(e -> e.getId().toString(),
+    					e -> e.getName() + " " + e.getSurname()));
+    	
 		form.add("book", new SelectInput("Ksiazka", (v) -> {
 			if(v == null || v.trim().equals("default")) throw new DataInputException("Ksiazka musi byc wybrana!");
-		}));
+		}, books));
 		
 		form.add("customer", new SelectInput("Klient", (v) -> {
 			if(v == null || v.trim().equals("")) throw new DataInputException("Klient musi byc wybrany!");
-		}));
+		}, customers));
 		
 		form.add("employee", new SelectInput("Pracownik", (v) -> {
 			if(v == null || v.trim().equals("")) throw new DataInputException("Pracownik musi byc wybrany!");
+		}, employees));
+		
+		form.add("start", new TextInput("Start (DD.MM.YYYY)", (v) -> {
+			if(v == null || v.trim().equals("") ) throw new DataInputException("Data startu wypozyczenia nie moze byc pusta!");
+			
+			try { LocalDate.parse(v, DateTimeFormatter.ofPattern("dd.MM.yyyy")); } 
+			catch(Exception e) { throw new DataInputException("Data startu jest nieprawidlowa!"); }
+		
+		}));
+		
+		form.add("end", new TextInput("Koniec (DD.MM.YYYY)", (v) -> {
+			if(v == null || v.trim().equals("")) throw new DataInputException("Data konca wypozyczenia nie moze byc pusta!");
+			
+			try { LocalDate.parse(v, DateTimeFormatter.ofPattern("dd.MM.yyyy")); } 
+			catch(Exception e) { throw new DataInputException("Data konca jest nieprawidlowa!"); }
 		}));
 		
 		return form;
     }
     
     private DataInputContainer getCategoryForm() {
-    	DataInputContainer form = new DataInputContainer("Dodaj Kategorie");
+    	DataInputContainer form = new DataInputContainer("Dodaj Kategorie") {
+
+			@Override
+			public String OnDataCorrectSubmission(Map<String, String> data) {
+			    Category category = new Category();
+			    category.setName(data.get("name"));
+			    
+			    String response = service.postJSONToAPI("categories", category);
+			    category = JsonUtility.fromJson(response, Category.class);
+			    
+			    return category.getId().toString();
+			}
+
+    		
+    	};
 		
 		form.add("name", new TextInput("Nazwa", (v) -> {
 			if(v == null || v.trim().equals("")) throw new DataInputException("Nazwa kategorii nie moze byc pusta!");
@@ -138,7 +294,22 @@ public class WebsiteController {
     }
     
     private DataInputContainer getImageForm() {
-    	DataInputContainer form = new DataInputContainer("Dodaj Zdjecie");
+    	DataInputContainer form = new DataInputContainer("Dodaj Zdjecie") {
+
+    		@Override
+    		public String OnDataCorrectSubmission(Map<String, String> data) {
+
+    		    Image image = new Image();
+
+    		    image.setBase64Data(data.get("image"));
+    		    
+    		    String response = service.postJSONToAPI("images", image);
+    		    image = JsonUtility.fromJson(response, Image.class);
+    		    
+    		    return image.getId().toString();
+    		}
+    		
+    	};
 		
 		form.add("image", new TextInput("Obrazek", (v) -> {
 			if(v == null || v.trim().equals("")) throw new DataInputException("Base64 obrazka nie moze byc pusty!");
@@ -148,7 +319,25 @@ public class WebsiteController {
     }
     
     private DataInputContainer getEmployeeForm() {
-    	DataInputContainer form = new DataInputContainer("Dodaj Pracownika");
+    	DataInputContainer form = new DataInputContainer("Dodaj Pracownika") {
+
+    		@Override
+    		public String OnDataCorrectSubmission(Map<String, String> data) {
+    		    Employee employee = new Employee();
+    		    employee.setName(data.get("name"));
+    		    employee.setSurname(data.get("surname"));
+    		    employee.setToken(data.get("token"));
+    		    employee.setEmail(data.get("email"));
+    		    employee.setPhoneNumber(data.get("phone"));
+    		    
+    		    String response = service.postJSONToAPI("employees", employee);
+    		    employee = JsonUtility.fromJson(response, Employee.class);
+    		    
+    		    return employee.getId().toString();
+    		}
+
+    		
+    	};
 		
 		form.add("name", new TextInput("Imie", (v) -> {
 			if(v == null || v.trim().equals("")) throw new DataInputException("Imie pracownika nie moze byc puste!");
@@ -174,7 +363,24 @@ public class WebsiteController {
     }
     
     private DataInputContainer getCustomerForm() {
-    	DataInputContainer form = new DataInputContainer("Dodaj Klienta");
+    	DataInputContainer form = new DataInputContainer("Dodaj Klienta") {
+
+    		@Override
+    		public String OnDataCorrectSubmission(Map<String, String> data) {
+    		    Customer customer = new Customer();
+    		    customer.setName(data.get("name"));
+    		    customer.setSurname(data.get("surname"));
+    		    customer.setEmail(data.get("email"));
+    		    customer.setPhoneNumber(data.get("phone"));
+    		    
+    		    String response = service.postJSONToAPI("customers", customer);
+    		    customer = JsonUtility.fromJson(response, Customer.class);
+    		    
+    		    return customer.getId().toString();
+    		}
+
+    		
+    	};
 		
 		form.add("name", new TextInput("Imie", (v) -> {
 			if(v == null || v.trim().equals("")) throw new DataInputException("Imie klienta nie moze byc puste!");
@@ -196,7 +402,22 @@ public class WebsiteController {
     }
     
     private DataInputContainer getAuthorForm() {
-    	DataInputContainer form = new DataInputContainer("Dodaj Autora");
+    	DataInputContainer form = new DataInputContainer("Dodaj Autora") {
+
+    		@Override
+    		public String OnDataCorrectSubmission(Map<String, String> data) {
+    		    Author author = new Author();
+    		    author.setName(data.get("name"));
+    		    author.setSurname(data.get("surname"));
+    		    
+    		    // Make the API call to save the author
+    		    String response = service.postJSONToAPI("authors", author);
+    		    author = JsonUtility.fromJson(response, Author.class);
+    		    
+    		    return author.getId().toString();
+    		}
+    		
+    	};
 		
 		form.add("name", new TextInput("Imie", (v) -> {
 			if(v == null || v.trim().equals("")) throw new DataInputException("Imie autora nie moze byc puste!");

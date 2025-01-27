@@ -1,5 +1,6 @@
 package pl.edu.pjwstk.s32410.library.shared.model;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.UUID;
 
@@ -34,10 +35,10 @@ public class Rental {
     private Employee employee;
 
     @NotNull
-    private Date start;
+    private LocalDate start;
     
     @NotNull
-    private Date end;
+    private LocalDate end;
     
-    private Date returnDate;
+    private LocalDate returnDate;
 }
